@@ -100,6 +100,7 @@
     plugins = with pkgs.vimPlugins; [
       airline
       coc-nvim
+      vim-nix
     ];
   };
 
