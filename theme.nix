@@ -22,8 +22,8 @@ in
   };
 
   config = mkIf (cfg.name != null) (
-    let 
-      themeColors = import ./. + (cfg.name + ".nix") {};
+    let
+      themeColors = import (./themes + "/${cfg.name}.nix");
     in
     {
       xresources.properties = mkIf cfg.setXresources {

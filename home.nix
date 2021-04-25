@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 {
-  imports = [ ./themes/theme.nix ];
+  imports = [ ./theme.nix ];
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
