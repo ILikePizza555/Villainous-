@@ -156,7 +156,7 @@
     userName = "Izzy Lancaster";
     signing = {
       key = "909FF46310D666DB";
-      signByDefault = false;
+      signByDefault = true;
     };
   };
 
