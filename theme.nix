@@ -7,11 +7,18 @@ let
 in
 {
   options.home.theme = {
+    enable = mkEnableOption "Home-manager theme module";
+
     name = mkOption {
       type = types.nullOr types.str;
       default = null;
       example = "Tokoyo Night";
-      description= "The name of the theme to use.";
+      description= "The name of the theme.";
+    };
+
+    colors = mkOption {
+      type = types.attrsOf types.str;
+      description = "The colors defined by the theme.";
     };
 
     setXresources = mkOption {
@@ -21,31 +28,26 @@ in
     };
   };
 
-  config = mkIf (cfg.name != null) (
-    let
-      themeColors = import (./themes + "/${cfg.name}.nix");
-    in
-    {
-      xresources.properties = mkIf cfg.setXresources {
-        "*.foreground" = themeColors.foreground;
-        "*.background" = themeColors.background;
-        "*.color0"  = themeColors.black;
-        "*.color1"  = themeColors.red;
-        "*.color2"  = themeColors.green;
-        "*.color3"  = themeColors.yellow;
-        "*.color4"  = themeColors.blue;
-        "*.color5"  = themeColors.magenta;
-        "*.color6"  = themeColors.cyan;
-        "*.color8"  = themeColors.darkgrey;
-        "*.color7"  = themeColors.grey;
-        "*.color9"  = themeColors.lightred;
-        "*.color10" = themeColors.lightgreen;
-        "*.color11" = themeColors.lightyellow;
-        "*.color12" = themeColors.lightblue;
-        "*.color13" = themeColors.lightmagenta;
-        "*.color14" = themeColors.lightcyan;
-        "*.color15" = themeColors.white;
-      };
-    }
-  );
+  config = mkIf cfg.enable {
+    xresources.properties = mkIf cfg.setXresources {
+      "*.foreground" = cfg.colors.foreground;
+      "*.background" = cfg.colors.background;
+      "*.color0"  = cfg.colors.black;
+      "*.color1"  = cfg.colors.red;
+      "*.color2"  = cfg.colors.green;
+      "*.color3"  = cfg.colors.yellow;
+      "*.color4"  = cfg.colors.blue;
+      "*.color5"  = cfg.colors.magenta;
+      "*.color6"  = cfg.colors.cyan;
+      "*.color8"  = cfg.colors.darkgrey;
+      "*.color7"  = cfg.colors.grey;
+      "*.color9"  = cfg.colors.lightred;
+      "*.color10" = cfg.colors.lightgreen;
+      "*.color11" = cfg.colors.lightyellow;
+      "*.color12" = cfg.colors.lightblue;
+      "*.color13" = cfg.colors.lightmagenta;
+      "*.color14" = cfg.colors.lightcyan;
+      "*.color15" = cfg.colors.white;
+    };
+  };
 }
