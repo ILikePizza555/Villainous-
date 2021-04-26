@@ -89,7 +89,8 @@
   fonts.fontconfig.enable = true;
 
   home.theme = {
-    name = "gruvbox";
+    enable = true;
+    colors = import ./themes/embark.nix;
     setXresources = true;
   };
 

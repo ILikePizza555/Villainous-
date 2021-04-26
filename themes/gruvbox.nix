@@ -3,7 +3,7 @@
   background = "#282828";
 
   black = "#282828";
-  darkgrey = "#928374";
+  grey = "#928374";
 
   red = "#cc241d";
   lightred = "#fb4934";
@@ -23,6 +23,6 @@
   cyan = "#689d6a";
   lightcyan = "#8ec07c";
 
-  grey = "#a89984";
+  lightgrey = "#a89984";
   white = "#ebdbb2";
 }
