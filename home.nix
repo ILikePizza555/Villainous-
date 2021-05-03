@@ -49,7 +49,7 @@
     ];
 
     gui-games = let
-      steam = steam.override {
+      steam = pkgs.steam.override {
         # nativeOnly = true;
         extraPkgs = p:
           with p; [
