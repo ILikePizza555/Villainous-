@@ -22,7 +22,7 @@ let
   fillWorkspaceList = workspaceList: amount:
     let 
       mapFn = num: { name = toString num; };
-      rangeBegin = (count workspaceList) + 1;
+      rangeBegin = (length workspaceList) + 1;
     in
     workspaceList ++ builtins.map mapFn (lib.range rangeBegin amount); 
 
@@ -131,17 +131,17 @@ in
     };
 
     workspaces = mkOption {
-      type = types.listOf types.submodule {
+      type = types.listOf (types.submodule {
         options = {
           name = mkOption {
             type = types.str;
           };
           assigns = mkOption {
-            types = types.listOf types.attrsOf types.str;
+            type = types.listOf types.attrsOf types.str;
             default = [];
           };
         };
-      };
+      });
       default = fillWorkspaceList [
         {
           name = "1: web";
@@ -221,7 +221,7 @@ in
             background = cfg.focusColor;
             border = cfg.focusColor;
             childBorder = cfg.focusColor;
-            indicator = indicatorColor;
+            indicator = cfg.indicatorColor;
             text = "#000000";
           };
 
@@ -229,14 +229,14 @@ in
             background = cfg.inactiveColor;
             border = cfg.inactiveColor;
             childBorder = cfg.inactiveColor;
-            indicator = indicatorColor;
+            indicator = cfg.indicatorColor;
             text = "#000000";
           };
         };
 
         keybindings = 
         let 
-          modifier = cfg.modifier;
+          modifier = cfg.commandModifier;
 
           # Generates an attrset where each key is (prefix + keys) and assigned to (command + direction).  
           makeDirectionalKeybindings = prefix: command: {direction, keys}:
@@ -244,7 +244,7 @@ in
 
           # Applies makeDirectionalKeybindings over dirKeysList and merges the resulting attribute lists
           makeAllDirectionalKeybindings = prefix: command: dirKeysList:
-            fold mergeAttrs {} (map (makeDirectionalKeyindings prefix command) dirKeysList);
+            fold mergeAttrs {} (map (makeDirectionalKeybindings prefix command) dirKeysList);
 
           makeZipKeybindings = prefix: command: params: keys: 
             fold mergeAttrs {} (zipListsWith (param: key: {"${prefix}+${key}" = "${command} ${param}";}) params keys);
@@ -257,7 +257,7 @@ in
           moveContainerOutput = makeAllDirectionalKeybindings "${modifier}+Ctrl" "move container to output" directionalKeys;
           moveWorkspaceOutput = makeAllDirectionalKeybindings "${modifier}+Ctrl+Shift" "move workspace to output" directionalKeys;
           changeWorkspace = makeZipKeybindings "${modifier}" "workspace" workspaceNames workspaceKeys; 
-          moveWorkspace = makeZipkeybindings "${modifier}+Ctrl" "move workspace" workspaceNames workspaceKeys;
+          moveWorkspace = makeZipKeybindings "${modifier}+Ctrl" "move workspace" workspaceNames workspaceKeys;
         in 
         moveFocus //
         moveContainer //
@@ -279,7 +279,7 @@ in
 
         terminal = cfg.terminal;
         fonts = cfg.fonts;
-        modifier = cfg.modifier; 
+        modifier = cfg.commandModifier; 
       };
     };
   };
