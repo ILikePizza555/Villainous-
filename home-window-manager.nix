@@ -152,11 +152,6 @@ in
   };
 
   config = {
-    home.packages = [
-      # upower is required by i3status-rust for the battery indicator.
-      pkgs.upower
-    ];
-
     programs.i3status-rust = {
       enable = true;
       bars = {
