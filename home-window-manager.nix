@@ -13,12 +13,6 @@ let
       ) listOfAttrs
     ) [{}] (attrNames attrsOfLists);
 
-  createWorkspaceColor = textColor: {
-    border = cfg.backgroundColor;
-    background = cfg.backgroundColor;
-    text = textColor;
-  };
-
   fillWorkspaceList = workspaceList: amount:
     let 
       mapFn = num: { name = toString num; };
@@ -70,42 +64,6 @@ in
   imports = [./programs/i3status-rust.nix];
 
   options.home.windowManager = {
-    backgroundColor = mkOption {
-      type = types.str;
-      default = "#000302";
-      description = "Background color for the bar.";
-    };
-
-    focusColor = mkOption {
-      type = types.str;
-      default = "#01DDDD";
-      description = "Color to use for a workspace or window with focus.";
-    };
-
-    activeColor = mkOption {
-      type = types.str;
-      default = "#00bfaf";
-      description = "Color to use when a workspace or window is visible or active, but doesn't have focus.";
-    };
-
-    urgentColor = mkOption {
-      type = types.str;
-      default = "#fd8a5e";
-      description = "Color to use when a window sets the urgent hint.";
-    };
-
-    inactiveColor = mkOption {
-      type = types.str;
-      default = "#6fdede";
-      description = "Color to use when a window or workspace is inactive.";
-    };
-
-    indicatorColor = mkOption {
-      type = types.str;
-      default = "#484e50";
-      description = "Color used for indicating where a new window will be opened";
-    };
-
     fonts = mkOption {
       type = types.listOf types.str;
       default = ["monospace 10" "FontAwesome 12"];
@@ -187,7 +145,6 @@ in
       enable = true;
       package =
         pkgs.rofi.override { plugins = [ pkgs.rofi-calc pkgs.rofi-emoji ]; };
-      pass.enable = true;
     };
 
     xsession.windowManager.i3 = {
@@ -195,39 +152,12 @@ in
       config = {
         bars = [
           {
-            colors = {
-              background = cfg.backgroundColor;
-
-              focusedWorkspace = createWorkspaceColor cfg.focusColor;
-              activeWorkspace = createWorkspaceColor cfg.activeColor;
-              urgentWorkspace = createWorkspaceColor cfg.urgentColor;
-              inactiveWorkspace = createWorkspaceColor cfg.inactiveColor;
-            };
-
             position = "top";
             statusCommand = "${pkgs.i3status-rust}/bin/i3status-rs ~/.config/i3status-rust/config-default.toml";
 
             fonts = cfg.fonts;
           }
         ];
-
-        colors = {
-          focused = {
-            background = cfg.focusColor;
-            border = cfg.focusColor;
-            childBorder = cfg.focusColor;
-            indicator = cfg.indicatorColor;
-            text = cfg.backgroundColor;
-          };
-
-          unfocused = {
-            background = cfg.inactiveColor;
-            border = cfg.inactiveColor;
-            childBorder = cfg.inactiveColor;
-            indicator = cfg.indicatorColor;
-            text = cfg.backgroundColor;
-          };
-        };
 
         keybindings = 
         let 
