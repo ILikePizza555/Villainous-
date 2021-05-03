@@ -67,6 +67,8 @@ let
   };
 in
 {
+  imports = [./programs/i3status-rust.nix];
+
   options.home.windowManager = {
     backgroundColor = mkOption {
       type = types.str;
@@ -238,7 +240,7 @@ in
 
           # Generates an attrset where each key is (prefix + keys) and assigned to (command + direction).  
           makeDirectionalKeybindings = prefix: command: {direction, keys}:
-            fold mergeAttrs {} (map k: { "${prefix}+${k}" = "${command} ${direction}";} keys);
+            fold mergeAttrs {} (map (k: { "${prefix}+${k}" = "${command} ${direction}";}) keys);
 
           # Applies makeDirectionalKeybindings over dirKeysList and merges the resulting attribute lists
           makeAllDirectionalKeybindings = prefix: command: dirKeysList:
