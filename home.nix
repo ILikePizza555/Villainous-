@@ -21,38 +21,35 @@
   # changes in each release.
   home.stateVersion = "21.03";
 
-  home.packages = let
+  home.packages = with pkgs; let
    
     fonts = [
-      pkgs.dejavu_fonts
-      pkgs.liberation_ttf
-      pkgs.noto-fonts
-      pkgs.cascadia-code
-      (pkgs.nerdfonts.override { fonts = ["CascadiaCode" "FiraCode" "Hack" "DroidSansMono"]; })
+      dejavu_fonts
+      liberation_ttf
+      noto-fonts
+      (nerdfonts.override { fonts = ["CascadiaCode" "FiraCode" "Hack" "DroidSansMono"]; })
     ];
 
     dev-tools = [
-      pkgs.nodejs-14_x
+      nodejs-14_x
       (import (fetchTarball "https://github.com/nix-community/rnix-lsp/archive/master.tar.gz"))
     ];
 
     # Gui apps
-
     gui-core = [
-      pkgs.arandr
-      pkgs.breeze-icons
-      pkgs.breeze-qt5
-      pkgs.glxinfo
-      pkgs.gnome3.adwaita-icon-theme
+      arandr
+      breeze-icons
+      breeze-qt5
+      glxinfo
+      gnome3.adwaita-icon-theme
       #pkgs-unstable.nur.repos.nexromancers.hacksaw
-      pkgs.hicolor-icon-theme
+      hicolor-icon-theme
       #pkgs-unstable.nur.repos.nexromancers.shotgun
-      #pkgs.nur.repos.bb010g.st-bb010g-unstable
-      pkgs.xsel
+      xsel
     ];
 
     gui-games = let
-      steam = pkgs.steam.override {
+      steam = steam.override {
         # nativeOnly = true;
         extraPkgs = p:
           with p; [
@@ -67,15 +64,15 @@
           ];
       };
     in [
-      pkgs.scummvm
+      scummvm
       steam
       steam.run
-      pkgs.stepmania
+      stepmania
       # pkgs.lutris
     ];
     
     gui-misc = [
-      pkgs.discord
+      discord
     ];
 
     gui-tools = [
@@ -92,6 +89,10 @@
     enable = true;
     colors = import ./themes/embark.nix;
     setXresources = true;
+  };
+
+  home.windowManager = {
+    fonts = ["Caskaydia Cove Nerd Font 10"];
   };
 
   programs.neovim = {

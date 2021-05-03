@@ -108,7 +108,7 @@ in
 
     fonts = mkOption {
       type = types.listOf types.str;
-      default = ["monospace 10"];
+      default = ["monospace 10" "FontAwesome 12"];
       description = "List of fonts to use for text.";
     };
 
