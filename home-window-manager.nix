@@ -114,7 +114,8 @@ in
       enable = true;
       bars = {
         default = {
-          icons = "awesome5";
+          icons = "awesome";
+          theme = "slick";
           blocks = [
             {
               block = "cpu";
