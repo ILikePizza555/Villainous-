@@ -72,31 +72,31 @@ in
   options.home.windowManager = {
     backgroundColor = mkOption {
       type = types.str;
-      default = "#000000";
+      default = "#000302";
       description = "Background color for the bar.";
     };
 
     focusColor = mkOption {
       type = types.str;
-      default = "#D4BFFF";
+      default = "#01DDDD";
       description = "Color to use for a workspace or window with focus.";
     };
 
     activeColor = mkOption {
       type = types.str;
-      default = "#A37ACC";
+      default = "#00bfaf";
       description = "Color to use when a workspace or window is visible or active, but doesn't have focus.";
     };
 
     urgentColor = mkOption {
       type = types.str;
-      default = "#FFE6B3";
+      default = "#fd8a5e";
       description = "Color to use when a window sets the urgent hint.";
     };
 
     inactiveColor = mkOption {
       type = types.str;
-      default = "#8A889D";
+      default = "#6fdede";
       description = "Color to use when a window or workspace is inactive.";
     };
 
@@ -217,7 +217,7 @@ in
             border = cfg.focusColor;
             childBorder = cfg.focusColor;
             indicator = cfg.indicatorColor;
-            text = "#000000";
+            text = cfg.backgroundColor;
           };
 
           unfocused = {
@@ -225,7 +225,7 @@ in
             border = cfg.inactiveColor;
             childBorder = cfg.inactiveColor;
             indicator = cfg.indicatorColor;
-            text = "#000000";
+            text = cfg.backgroundColor;
           };
         };
 
