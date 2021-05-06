@@ -123,4 +123,10 @@
     };
   };
 
+  programs.direnv = {
+    enable = true;
+    enableNixDirenvIntegration = true;
+  };
+
+  services.lorri.enable = true;
 }
