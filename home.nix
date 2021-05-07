@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 {
-  imports = [ ./theme.nix ./home-window-manager.nix ];
+  imports = [ ./loose_configs ./theme.nix ./home-window-manager.nix ];
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -104,9 +104,6 @@
       vim-nix
     ];
   };
-
-  # Config file for coc-nvim plugin
-  xdg.configFile."nvim/coc-settings.json".source = ./loose_configs/coc-settings.json;
 
   programs.urxvt = {
     enable = true;
