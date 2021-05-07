@@ -106,7 +106,7 @@
   };
 
   # Config file for coc-nvim plugin
-  xdg.configFile."nvim/coc-settings.json".source = ./coc-settings.json;
+  xdg.configFile."nvim/coc-settings.json".source = ./loose_configs/coc-settings.json;
 
   programs.urxvt = {
     enable = true;
