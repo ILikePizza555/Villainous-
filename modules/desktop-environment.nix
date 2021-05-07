@@ -125,6 +125,10 @@ in
               block = "sound";
             }
             {
+              block = "bluetooth";
+              mac = "CC:98:8B:57:17:1C";
+            }
+            {
               block = "networkmanager";
               ap_format = "{ssid.10} {strength}%";
             }
@@ -197,7 +201,7 @@ in
           "${modifier}+Shift+c" = "reload";
           "${modifier}+Shift+r" = "restart";
 
-          "${modifier}+Space" = "exec rofi -show run";
+          "${modifier}+d" = "exec rofi -show run";
           "${modifier}+c" = "exec rofi -show calc -modi calc";
           "${modifier}+x" = "exec rofi -show emoji -modi emoji";
           "${modifier}+n" = "exec rofi -show window -modi window";
