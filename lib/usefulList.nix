@@ -5,8 +5,7 @@ This module contains useful helper functions for working with lists.
 
 rec {
   /*
-  Takes the cartesian product of an attribute set of lists of strings, and maps the provided function
-  over the result.
+  Takes the cartesian product of an attribute set of lists of strings, and maps the provided function over the result.
   */
   crossMap = mapFn: attrsOfLists:
     map mapFn (polyfill.cartesianProductOfSets attrsOfLists);
