@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 {
-  imports = [ ./loose_configs ./theme.nix ./home-window-manager.nix ];
+  imports = [ ./loose_configs ./theme.nix ./modules/desktop-environment.nix ];
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -91,7 +91,7 @@
     setXresources = true;
   };
 
-  home.windowManager = {
+  home.desktop = {
     fonts = ["Caskaydia Cove Nerd Font 10"];
   };
 
