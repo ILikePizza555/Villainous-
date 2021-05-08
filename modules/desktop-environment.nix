@@ -1,24 +1,10 @@
 {pkgs, config, lib, ...}:
 
-with lib;
-
 let
-  cfg = config.home.windowManager;
+  # Import our own library.
+  lib = lib.extends (self: super: import ../lib {lib = super; });
 
-  # Polyfill from nixpkgs master
-  cartesianProductOfSets = attrsOfLists:
-    lib.foldl' (listOfAttrs: attrName:
-      concatMap (attrs:
-        map (listValue: attrs // { ${attrName} = listValue; }) attrsOfLists.${attrName}
-      ) listOfAttrs
-    ) [{}] (attrNames attrsOfLists);
-
-  fillWorkspaceList = workspaceList: amount:
-    let 
-      mapFn = num: { name = toString num; };
-      rangeBegin = (length workspaceList) + 1;
-    in
-    workspaceList ++ builtins.map mapFn (lib.range rangeBegin amount); 
+  cfg = config.home.desktop;
 
   /*
   A list of attrSets correlating the i3 direction name with a directional key and a vi key
@@ -30,56 +16,65 @@ let
     { direction = "right"; keys = ["Right" "l"]; }
   ];
 
-  /*
-  Takes the cartesian product of an attribute set of lists of strings, and concats the resulting list of attribute sets of strings with the provided separator to produce a list of strings.
-
-  Example:
-    crossStringLists "+" {lis1 = ["a" "b" "c"] lis2 = ["d" "e" "f"]}
-    => [
-        "a+d"
-        "a+e"
-        "a+f"
-        "b+d"
-        "b+e"
-        "b+f"
-        "c+d"
-        "c+e"
-        "c+f"
-      ]
-  */
-  crossStringLists = separator: attrsOfLists:
-    let
-      mapFn = attr: builtins.concatStringsSep separator (builtins.attrValues attr); 
-    in
-    map mapFn (cartesianProductOfSets attrsOfLists);
-
-
   # List of keybindings for workspaces
-  workspaceKeys = crossStringLists "+" { 
+  workspaceKeys = lib.usefulList.productOfStrings "+" { 
     lis1 = ["" "Shift"]; 
     lis2 = ["1" "2" "3" "4" "5" "6" "7" "8" "9" "0"]; 
   };
+
+  generateWorkspace = num: {name = toString num;};
+
+  mkKeyOption = default: description: lib.mkOption {
+    type = types.str;
+    inherit default;
+    inherit description;
+  };
 in
 {
-  imports = [./programs/i3status-rust.nix];
+  imports = [../programs/i3status-rust.nix];
 
-  options.home.windowManager = {
+  options.home.desktop = with lib; {
     fonts = mkOption {
       type = types.listOf types.str;
       default = ["monospace 10" "FontAwesome 12"];
       description = "List of fonts to use for text.";
     };
 
-    commandModifier = mkOption {
-      type = types.str;
-      default = "Mod4";
-      description = "The modifier key that prefaces all i3 commands.";
-    };
+    keys = mkOption {
+      type = types.submodule {
+        options = {
+          commandModifier = mkKeyOption "Mod4" "The modifier key that prefaces all i3 commands.";
+          moveModifier = mkKeyOption "Ctrl" "The modifier to use to specify movement commands.";
 
-    moveModifier = mkOption {
-      type = types.str;
-      default = "Ctrl";
-      description = "The modifier to combine the with command modifier for movement commands.";
+          terminal = mkKeyOption "Return" "The keybinding for launching the terminal.";
+          kill = mkKeyOption "Shift+Escape" "The keybinding for closing an application.";
+
+          rofiPrimary = mkKeyOption "space" "The keybinding for launching rofi in run mode with all the modi.";
+          rofiCalc = mkKeyOption "c" "The keybinding for launching rofi in calc mode.";
+          rofiEmoji = mkKeyOption "x" "The keybinding for launching rofi in emoji mode.";
+          rofiWindow = mkKeyOption "n" "The keybinding for launching rofi in window-switcher mode.";
+
+          focusParent = mkKeyOption "a" "The keybinding for moving focus to the parent container.";
+
+          resize = mkKeyOption "r" "The keybinding for switching to resize mode.";
+
+          splitHorizontal = mkKeyOption "h" "The keybinding for changing the focused container into a horizontal split container.";
+          splitVertical = mkKeyOption "v" "The keybinding for changing the focused container into a vertical split container.";
+          
+          fullscreen = mkKeyOption "f" "The keybinding for toggling fullscreen on the current container.";
+
+          layoutStacking = mkKeyOption "s" "The keybinding for switching the layout mode to stacking.";
+          layoutTabbed = mkKeyOption "w" "The keybinding for switching the layout mode to tabbed.";
+          layoutSplit = mkKeyOption "e" "The keybinding for toggling the layout mode to split.";
+
+          floating = mkKeyOption "Shift+f" "The keybinding for toggling floating mode on a window.";
+          focusToggle = mkKeyOption "Alt+space" "The keybinding for toggling focus mode between floating and tiling windows.";
+
+          reload = mkKeyOption "Shift+c" "The keybinding for reloading the i3 config.";
+          restart = mkKeyOption "Shift+r" "The keybinding for restarting i3.";
+          exit = mkKeyOption "Shift+e" "The keybinding for exiting i3.";
+        }
+      };
     };
 
     terminal = mkOption {
@@ -100,12 +95,15 @@ in
           };
         };
       });
-      default = fillWorkspaceList [
-        {
-          name = "1: web";
-          assigns = [{ class = "^Firefox$"; }];
-        }
-      ] 20;
+      default = let 
+        defaultNamedWorkspaces = [
+          {
+            name = "1: web";
+            assigns = [{ class = "^Firefox$"; }];
+          }
+        ];
+      in
+      usefulList.fillList generateWorkspace 20 defaultNamedWorkspaces;
     };
   };
 
@@ -165,8 +163,9 @@ in
         ];
 
         keybindings = 
-        let 
-          modifier = cfg.commandModifier;
+        let
+          keys = cfg.keys;
+          modifier = cfg.keys.commandModifier;
 
           # Generates an attrset where each key is (prefix + keys) and assigned to (command + direction).  
           makeDirectionalKeybindings = prefix: command: {direction, keys}:
@@ -196,18 +195,35 @@ in
         changeWorkspace //
         moveWorkspace //
         {
-          "${modifier}+Return" = "exec ${cfg.terminal}"; 
-          "${modifier}+Shift+Esc" = "kill";
-          "${modifier}+Shift+c" = "reload";
-          "${modifier}+Shift+r" = "restart";
+          "${modifier}+${keys.terminal}" = "exec ${cfg.terminal}"; 
+          "${modifier}+${keys.kill}" = "kill";
 
-          "${modifier}+d" = "exec rofi -show run";
-          "${modifier}+c" = "exec rofi -show calc -modi calc";
-          "${modifier}+x" = "exec rofi -show emoji -modi emoji";
-          "${modifier}+n" = "exec rofi -show window -modi window";
+          "${modifier}+${keys.rofiPrimary}" = "exec rofi -show run";
+          "${modifier}+${keys.rofiCalc}" = "exec rofi -show calc -modi calc";
+          "${modifier}+${keys.rofiEmoji}" = "exec rofi -show emoji -modi emoji";
+          "${modifier}+${keys.rofiWindow}" = "exec rofi -show window -modi window";
+          
+          "${modifier}+${keys.focusParent}" = "focus parent";
+
+          "${modifier}+${keys.resize}" = "mode resize";
+          
+          "${modifier}+${keys.splitHorizontal}" = "split h";
+          "${modifier}+${keys.splitVertical}" = "split v";
+
+          "${modifier}+${keys.fullscreen}" = "fullscreen toggle";
+
+          "${modifier}+${keys.layoutStacking}" = "layout stacking";
+          "${modifier}+${keys.layoutTabbed}" = "layout tabbed";
+          "${modifier}+${keys.layoutSplit}" = "layout split";
+
+          "${modifier}+${keys.floating}" = "floating toggle";
+          "${modifier}+${keys.focusToggle}" = "focus mode_toggle";
+
+          "${modifier}+${keys.reload}" = "reload";
+          "${modifier}+${keys.restart}" = "restart";
+          "${modifier}+${keys.exit}" = "exec i3-nagbar -t warning -m 'Do you want to exit i3?' -b 'Yes' 'i3-msg exit'";
         };
 
-        terminal = cfg.terminal;
         fonts = cfg.fonts;
         modifier = cfg.commandModifier; 
       };
