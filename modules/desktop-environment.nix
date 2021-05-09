@@ -113,14 +113,7 @@ in
       bars = {
         default = {
           icons = "awesome";
-          settings = {
-            theme = {
-              name = "slick";
-              overrides = {
-                separator = "\\ue0b9";
-              };
-            };
-          };
+          theme = "slick";
           blocks = [
             {
               block = "cpu";
