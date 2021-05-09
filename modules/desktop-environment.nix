@@ -17,8 +17,8 @@ let
   ];
 
   # List of keybindings for workspaces
-  workspaceKeys = vlib.usefulList.productOfStrings "+" { 
-    lis1 = ["" "Shift"]; 
+  workspaceKeys = vlib.usefulList.productOfStrings "" { 
+    lis1 = ["" "Shift+"]; 
     lis2 = ["1" "2" "3" "4" "5" "6" "7" "8" "9" "0"]; 
   };
 
