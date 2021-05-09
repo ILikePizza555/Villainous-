@@ -66,7 +66,7 @@ in
           layoutSplit = mkKeyOption "e" "The keybinding for toggling the layout mode to split.";
 
           floating = mkKeyOption "Shift+f" "The keybinding for toggling floating mode on a window.";
-          focusToggle = mkKeyOption "Alt+space" "The keybinding for toggling focus mode between floating and tiling windows.";
+          focusToggle = mkKeyOption "Mod1+space" "The keybinding for toggling focus mode between floating and tiling windows.";
 
           reload = mkKeyOption "Shift+c" "The keybinding for reloading the i3 config.";
           restart = mkKeyOption "Shift+r" "The keybinding for restarting i3.";
