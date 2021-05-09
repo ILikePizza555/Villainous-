@@ -2,7 +2,7 @@
 
 let
   # Import our own library.
-  lib = lib.extends (self: super: import ../lib {lib = super; });
+  vlib = import ../lib { inherit lib; };
 
   cfg = config.home.desktop;
 
@@ -17,15 +17,13 @@ let
   ];
 
   # List of keybindings for workspaces
-  workspaceKeys = lib.usefulList.productOfStrings "+" { 
+  workspaceKeys = vlib.usefulList.productOfStrings "+" { 
     lis1 = ["" "Shift"]; 
     lis2 = ["1" "2" "3" "4" "5" "6" "7" "8" "9" "0"]; 
   };
 
-  generateWorkspace = num: {name = toString num;};
-
   mkKeyOption = default: description: lib.mkOption {
-    type = types.str;
+    type = lib.types.str;
     inherit default;
     inherit description;
   };
@@ -73,8 +71,9 @@ in
           reload = mkKeyOption "Shift+c" "The keybinding for reloading the i3 config.";
           restart = mkKeyOption "Shift+r" "The keybinding for restarting i3.";
           exit = mkKeyOption "Shift+e" "The keybinding for exiting i3.";
-        }
+        };
       };
+      default = {};
     };
 
     terminal = mkOption {
@@ -96,6 +95,7 @@ in
         };
       });
       default = let 
+        generateWorkspace = num: {name = toString num;};
         defaultNamedWorkspaces = [
           {
             name = "1: web";
@@ -103,7 +103,7 @@ in
           }
         ];
       in
-      usefulList.fillList generateWorkspace 20 defaultNamedWorkspaces;
+      vlib.usefulList.fillList generateWorkspace 20 defaultNamedWorkspaces;
     };
   };
 
@@ -169,16 +169,16 @@ in
 
           # Generates an attrset where each key is (prefix + keys) and assigned to (command + direction).  
           makeDirectionalKeybindings = prefix: command: {direction, keys}:
-            fold mergeAttrs {} (map (k: { "${prefix}+${k}" = "${command} ${direction}";}) keys);
+            lib.fold lib.mergeAttrs {} (map (k: { "${prefix}+${k}" = "${command} ${direction}";}) keys);
 
           # Applies makeDirectionalKeybindings over dirKeysList and merges the resulting attribute lists
           makeAllDirectionalKeybindings = prefix: command: dirKeysList:
-            fold mergeAttrs {} (map (makeDirectionalKeybindings prefix command) dirKeysList);
+            lib.fold lib.mergeAttrs {} (map (makeDirectionalKeybindings prefix command) dirKeysList);
 
           makeZipKeybindings = prefix: command: params: keys: 
-            fold mergeAttrs {} (zipListsWith (param: key: {"${prefix}+${key}" = "${command} ${param}";}) params keys);
+            lib.fold lib.mergeAttrs {} (lib.zipListsWith (param: key: {"${prefix}+${key}" = "${command} ${param}";}) params keys);
 
-          workspaceNames = map (getAttr "name") cfg.workspaces; 
+          workspaceNames = map (lib.getAttr "name") cfg.workspaces; 
 
           # Keybindings
           moveFocus = makeAllDirectionalKeybindings modifier "focus" directionalKeys;
@@ -225,7 +225,7 @@ in
         };
 
         fonts = cfg.fonts;
-        modifier = cfg.commandModifier; 
+        modifier = cfg.keys.commandModifier; 
       };
     };
   };
