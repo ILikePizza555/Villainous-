@@ -126,4 +126,5 @@
   };
 
   services.lorri.enable = true;
+  services.flameshot.enable = true;
 }
