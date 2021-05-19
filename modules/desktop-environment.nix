@@ -116,11 +116,13 @@ in
           theme = "slick";
           blocks = [
             {
-              block = "cpu";
-              interval = 3;
+              block = "custom";
+              command = "echo Remember you can meditate";
+              interval = "once";
             }
             {
-              block = "sound";
+              block = "cpu";
+              interval = 3;
             }
             {
               block = "bluetooth";
@@ -133,6 +135,13 @@ in
             {
               block = "battery";
               driver = "upower";
+            }
+            {
+              block = "sound";
+            }
+            {
+              block = "backlight";
+              device = "intel_backlight";
             }
             {
               block = "time";
