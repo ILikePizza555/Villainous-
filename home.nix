@@ -111,17 +111,18 @@
       airline
       coc-nvim
       vim-nix
+      nerdtree
+      vim-devicons
     ];
     extraConfig = ''
-      set tabwidth = 4
-      set shiftwidth = 4
+      set number
+      set tabstop=4
+      set shiftwidth=4
+      set noequalalways
 
-      let g:netrw_liststyle = 3
-      let g:netrw_banner = 0
-      let g:netrw_browse_split = 1
       augroup ProjectDrawer
         autocmd!
-        autocmd VimEnter * :Vexplore
+        autocmd VimEnter * NERDTree
       augroup END
     '';
   };
