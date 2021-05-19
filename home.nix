@@ -112,6 +112,18 @@
       coc-nvim
       vim-nix
     ];
+    extraConfig = ''
+      set tabwidth = 4
+      set shiftwidth = 4
+
+      let g:netrw_liststyle = 3
+      let g:netrw_banner = 0
+      let g:netrw_browse_split = 1
+      augroup ProjectDrawer
+        autocmd!
+        autocmd VimEnter * :Vexplore
+      augroup END
+    '';
   };
 
   programs.urxvt = {
