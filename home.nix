@@ -35,53 +35,62 @@
       (import (fetchTarball "https://github.com/nix-community/rnix-lsp/archive/master.tar.gz"))
     ];
 
-    # Gui apps
-    gui-core = [
-      arandr
-      breeze-icons
-      breeze-qt5
-      glxinfo
-      gnome3.adwaita-icon-theme
-      #pkgs-unstable.nur.repos.nexromancers.hacksaw
-      hicolor-icon-theme
-      #pkgs-unstable.nur.repos.nexromancers.shotgun
-      xsel
-    ];
+    gui = let
 
-    gui-games = let
-      steam = pkgs.steam.override {
-        # nativeOnly = true;
-        extraPkgs = p:
-          with p; [
-            libpng
-            usbutils
-            lsb-release
-            procps
-            dbus_daemon
-            libnice
-            libcap
-            libpng
-          ];
-      };
-    in [
-      scummvm
-      steam
-      steam.run
-      stepmania
-      # pkgs.lutris
-    ];
-    
-    gui-misc = [
-      discord
-    ];
+      # Gui apps
+      gui-core = [
+        arandr
+        breeze-icons
+        breeze-qt5
+        glxinfo
+        gnome3.adwaita-icon-theme
+        #pkgs-unstable.nur.repos.nexromancers.hacksaw
+        hicolor-icon-theme
+        #pkgs-unstable.nur.repos.nexromancers.shotgun
+        xsel
+      ];
 
-    gui-tools = [
-     #`` pkgs.vscode
-    ];
-    
-    gui = lib.concatLists [ gui-core gui-games gui-misc gui-tools ];
+      gui-games = let
+        steam = pkgs.steam.override {
+          # nativeOnly = true;
+          extraPkgs = p:
+            with p; [
+              libpng
+              usbutils
+              lsb-release
+              procps
+              dbus_daemon
+              libnice
+              libcap
+              libpng
+            ];
+        };
+      in [
+        scummvm
+        steam
+        steam.run
+        stepmania
+        # pkgs.lutris
+      ];
+
+      gui-media = [
+        vlc
+      ];
+      
+      gui-misc = [
+        discord
+      ];
+
+      gui-tools = [
+       #`` pkgs.vscode
+      ];
+    in lib.concatLists [ gui-core gui-games gui-media gui-misc gui-tools ];
   
-  in lib.concatLists [ fonts dev-tools gui ];
+  misc = [
+    youtube-dl
+  ];
+
+  in lib.concatLists [ fonts dev-tools gui misc ];
 
   fonts.fontconfig.enable = true;
 
