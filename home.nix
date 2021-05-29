@@ -119,6 +119,7 @@
       set tabstop=4
       set shiftwidth=4
       set noequalalways
+      set mouse=nvc
 
       augroup ProjectDrawer
         autocmd!
