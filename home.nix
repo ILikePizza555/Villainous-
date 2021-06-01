@@ -110,12 +110,22 @@
   programs.neovim = {
     enable = true;
     withPython3 = true;
-    plugins = with pkgs.vimPlugins; [
+    plugins = let
+      vim-editerm = pkgs.vimUtils.buildVimPlugin {
+        name = "vim-editerm";
+        src = pkgs.fetchFromGithub {
+          owner = "kyoh86";
+          repo = "vim-editerm";
+          rev = "786b6d8a25b74a168e2a0792aa12dbfe4cb0aabb";
+        };
+      };
+    in with pkgs.vimPlugins; [
       airline
       coc-nvim
       vim-nix
       nerdtree
       vim-devicons
+      vim-editerm
     ];
     extraConfig = ''
       set number
