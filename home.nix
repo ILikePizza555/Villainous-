@@ -85,6 +85,7 @@
 
       gui-tools = [
        #`` pkgs.vscode
+       gnome3.nautilus
       ];
     in lib.concatLists [ gui-core gui-games gui-media gui-misc gui-tools ];
   
