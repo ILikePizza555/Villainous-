@@ -33,6 +33,8 @@
     dev-tools = [
       nodejs-14_x
       (import (fetchTarball "https://github.com/nix-community/rnix-lsp/archive/master.tar.gz"))
+      git-revise
+      ripgrep
     ];
 
     gui = let
