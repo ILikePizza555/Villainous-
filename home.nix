@@ -163,4 +163,8 @@
 
   services.lorri.enable = true;
   services.flameshot.enable = true;
+
+  home.sessionVariables = {
+    VISUAL = "nvim";
+  };
 }
