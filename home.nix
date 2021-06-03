@@ -35,6 +35,7 @@
       (import (fetchTarball "https://github.com/nix-community/rnix-lsp/archive/master.tar.gz"))
       git-revise
       ripgrep
+      jq
     ];
 
     gui = let
@@ -109,6 +110,7 @@
 
   programs.neovim = {
     enable = true;
+    withPython = false;
     withPython3 = true;
     plugins = with pkgs.vimPlugins; [
       airline
