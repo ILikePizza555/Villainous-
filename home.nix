@@ -111,12 +111,24 @@
   programs.neovim = {
     enable = true;
     withPython3 = true;
-    plugins = with pkgs.vimPlugins; [
+    plugins = let
+      vim-terra = pkgs.vimUtils.buildVimPlugin {
+        name = "vim-terra";
+        src = pkgs.fetchFromGitHub {
+          owner = "jakwings";
+          repo = "vim-terra";
+          rev = "722ad598ae35287d8aef5ade9ac64180ef0e937e";
+          sha256 = "1hqyjcji2j24z8aws4djhy0x714vbil0wvi05lwm6sarwx5vvdzl";
+        };
+      };
+    in
+    with pkgs.vimPlugins; [
       airline
       coc-nvim
       vim-nix
       nerdtree
       vim-devicons
+      vim-terra
     ];
     extraConfig = ''
       set number
