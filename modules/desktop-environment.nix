@@ -29,8 +29,6 @@ let
   };
 in
 {
-  imports = [../programs/i3status-rust.nix];
-
   options.home.desktop = with lib; {
     fonts = mkOption {
       type = types.listOf types.str;
