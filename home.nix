@@ -19,7 +19,7 @@
   # You can update Home Manager without changing this value. See
   # the Home Manager release notes for a list of state version
   # changes in each release.
-  home.stateVersion = "21.03";
+  home.stateVersion = "21.05";
 
   home.packages = with pkgs; let
    
@@ -110,7 +110,6 @@
 
   programs.neovim = {
     enable = true;
-    withPython = false;
     withPython3 = true;
     plugins = with pkgs.vimPlugins; [
       airline
