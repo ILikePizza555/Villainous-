@@ -141,6 +141,11 @@
         autocmd!
         autocmd VimEnter * NERDTree
       augroup END
+
+      augroup terra_ft
+        au!
+        autocmd BufNewFile,BufRead *.t set syntax=terra
+      augroup END
     '';
   };
 
