@@ -53,29 +53,6 @@
         xsel
       ];
 
-      gui-games = let
-        steam = pkgs.steam.override {
-          # nativeOnly = true;
-          extraPkgs = p:
-            with p; [
-              libpng
-              usbutils
-              lsb-release
-              procps
-              dbus_daemon
-              libnice
-              libcap
-              libpng
-            ];
-        };
-      in [
-        scummvm
-        steam
-        steam.run
-        stepmania
-        # pkgs.lutris
-      ];
-
       gui-media = [
         vlc
       ];
@@ -85,10 +62,10 @@
       ];
 
       gui-tools = [
-       #`` pkgs.vscode
+       vscode
        gnome3.nautilus
       ];
-    in lib.concatLists [ gui-core gui-games gui-media gui-misc gui-tools ];
+    in lib.concatLists [ gui-core gui-media gui-misc gui-tools ];
   
   misc = [
     youtube-dl
@@ -144,7 +121,7 @@
 
       augroup terra_ft
         au!
-        autocmd BufNewFile,BufRead *.t set syntax=terra
+        autocmd BufNewFile,BufRead *.t set filetype=terra
       augroup END
     '';
   };
@@ -159,7 +136,7 @@
     userEmail = "avrisaac555@gmail.com";
     userName = "Izzy Lancaster";
     signing = {
-      key = "909FF46310D666DB";
+      key = "C9C8B129E4E6A2C0";
       signByDefault = true;
     };
   };
