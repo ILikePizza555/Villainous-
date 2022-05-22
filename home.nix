@@ -148,6 +148,12 @@
     enableFishIntegration = true;
   };
 
+  programs.atuin = {
+    enable = true;
+    enableBashIntegration = true;
+    enableFishIntegration = true;
+  };
+
   services.lorri.enable = true;
   services.flameshot.enable = true;
 
